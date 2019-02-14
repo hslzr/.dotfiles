@@ -5,6 +5,7 @@ set nowrap
 set showbreak=+++
 set textwidth=80
 set showmatch	
+set encoding=utf-8
 syntax on
  
 set hlsearch
@@ -43,6 +44,14 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'slim-template/vim-slim.git'
 Plugin 'tpope/vim-rails'
+Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'tpope/vim-endwise'
+Plugin 'godlygeek/tabular'
+Plugin 'itchyny/lightline.vim'
+
+" JS shit I have to install...
+Plugin 'digitaltoad/vim-pug'
+Plugin 'posva/vim-vue'
 
 call vundle#end()
 filetype plugin indent on
@@ -62,9 +71,23 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 2
 let g:indent_guides_start_level = 2
 
+" NERDTree
+let g:NERDTreeNodeDelimiter = "\u00a0"
+
+" Light line settings
+set laststatus=2
+set noshowmode
+let g:lightline = {
+  \ 'colorscheme': 'wombat',
+  \ 'active': {
+  \   'right': [ [ 'lineinfo' ],
+  \              [ 'percent' ],
+  \              [ 'fileformat' ] ]
+  \ },
+  \ }
+
 " Global <Leader>
 let mapleader = ","
-
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 autocmd Filetype ruby set softtabstop=2
