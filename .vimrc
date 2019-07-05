@@ -6,6 +6,7 @@ set showbreak=+++
 set textwidth=80
 set showmatch	
 set encoding=utf-8
+set mouse=nicr
 syntax on
  
 set hlsearch
@@ -49,10 +50,6 @@ Plugin 'tpope/vim-endwise'
 Plugin 'godlygeek/tabular'
 Plugin 'itchyny/lightline.vim'
 
-" JS shit I have to install...
-Plugin 'digitaltoad/vim-pug'
-Plugin 'posva/vim-vue'
-
 call vundle#end()
 filetype plugin indent on
 
@@ -66,9 +63,9 @@ let g:go_highlight_function_calls = 1
 
 " Indent Guides
 hi IndentGuidesOdd  ctermbg=black
-hi IndentGuidesEven ctermbg=234
+hi IndentGuidesEven ctermbg=239
 let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 2
+let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 
 " NERDTree
