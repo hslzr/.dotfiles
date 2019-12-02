@@ -49,6 +49,19 @@ Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'tpope/vim-endwise'
 Plugin 'godlygeek/tabular'
 Plugin 'itchyny/lightline.vim'
+Plugin 'Townk/vim-autoclose'
+
+" Vue stuff
+Plugin 'posva/vim-vue'
+
+" React stuff...
+Plugin 'pangloss/vim-javascript'
+Plugin 'maxmellon/vim-jsx-pretty'
+Plugin 'kristijanhusak/vim-js-file-import'
+Plugin 'prettier/vim-prettier', {
+  \'do': 'yarn install',
+  \'for': ['javascript', 'typescript', 'css'] }
+
 
 call vundle#end()
 filetype plugin indent on
@@ -57,9 +70,11 @@ set background=dark
 colorscheme solarized
 
 " Golang
+let g:go_null_module_warning = 0
 let g:go_fmt_command = "goimports"
 let g:go_highlight_functions = 1
 let g:go_highlight_function_calls = 1
+let g_go_auto_type_info = 1
 
 " Indent Guides
 hi IndentGuidesOdd  ctermbg=black
@@ -70,6 +85,9 @@ let g:indent_guides_start_level = 2
 
 " NERDTree
 let g:NERDTreeNodeDelimiter = "\u00a0"
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger="<tab>"
 
 " Light line settings
 set laststatus=2

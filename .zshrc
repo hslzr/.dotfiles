@@ -2,12 +2,13 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/hslzr/.oh-my-zsh
+export ZSH=/Users/developer/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="agnoster"
+#ZSH_THEME="agnoster"
+ZSH_THEME="minimal"
 
 # Uncomment the following line to use case-sensitive completion.
 CASE_SENSITIVE="true"
@@ -84,35 +85,52 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 unsetopt correct_all
+setopt +o nomatch
 
 #
 #
-#       ALIAS
+#       ALIASES
 #
 
 # General stuff
-alias love="/Applications/love.app/Contents/MacOS/love"
-alias greppo='grep -nr'
+alias please="sudo"
+alias plz="sudo"
+alias devspace="cd ~/dev"
+
 # Docker
 alias dcrc='docker-compose run --rm app rails c'
 alias dcrdbm='docker-compose run --rm app rails db:migrate'
 alias dcrr='docker-compose run --rm'
 alias dcrspec='docker-compose run --rm test rspec'
 alias dclean='docker rmi -f $(docker images -q -f dangling=true)'
+
 # Git
-alias gitclr='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d'
+alias gitclr='git branch --merged | egrep -v "(^\*|master|develop)" | xargs git branch -d'
 
-# Ukko-specific stuff
-alias cdgimau='cd ~/dev/ukko/gimau/sacs'
+# Python
+alias python="python3"
+alias pip="pip3"
 
+# Ruby
+alias be='bundle exec'
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-export ANT_HOME="/usr/local/opt/ant"
-export MAVEN_HOME="/usr/local/opt/maven"
-export GRADLE_HOME="/usr/local/opt/gradle"
-export ANDROID_HOME="/usr/local/share/android-sdk"
-export ANDROID_NDK_HOME="/usr/local/share/android-ndk"
-export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH="$HOME/.npm-packages/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
+export PATH="/usr/local/go/bin:$PATH"
+
+eval $(thefuck --alias)
+
+# Sadler Stuff
+alias sadler="cd /opt/itexico/sadler"
+alias sadlerup="sadler && docker-compose -f Sadler-docker/docker-compose/docker-compose.yml up -d"
+alias sadlerup-log="sadler && docker-compose -f Sadler-docker/docker-compose/docker-compose.yml up"
+alias sadlerdown="sadler && docker-compose -f Sadler-docker/docker-compose/docker-compose.yml down"
+alias sadlersrc="cd /opt/itexico/sadler/Sadler"
+alias sadlergetthisbread="sadlerdown && sadlerup && sadlersrc"
+alias sadleryeet="sadlerdown && cd ~"
+
+alias sshliquid="ssh secure@liquidweb"
+
+# PHP
+alias phpstan='docker run -v $PWD:/app --rm phpstan/phpstan'
