@@ -55,6 +55,65 @@ check_git() {
     fi
 }
 
+# Function to check if Neovim is installed
+check_neovim() {
+    if ! command -v nvim >/dev/null 2>&1; then
+        print_status "Neovim not found. Installing via Homebrew..."
+        
+        # Install Neovim
+        brew install neovim
+        
+        print_success "Neovim installed successfully!"
+    else
+        print_success "Neovim is already installed"
+    fi
+    return 0
+}
+
+# Function to setup Neovim configuration
+setup_neovim() {
+    local dotfiles_nvim="$HOME/.dotfiles/nvim"
+    local config_dir="$HOME/.config"
+    local nvim_config="$config_dir/nvim"
+    
+    # First ensure Neovim is installed
+    check_neovim
+    
+    # Check if .config directory exists, create if it doesn't
+    if [[ ! -d "$config_dir" ]]; then
+        print_status "Creating .config directory..."
+        mkdir -p "$config_dir"
+    fi
+    
+    # Check if nvim config exists in dotfiles
+    if [[ ! -d "$dotfiles_nvim" ]]; then
+        print_error "Neovim configuration not found in dotfiles"
+        return 1
+    fi
+    
+    # Handle existing nvim config
+    if [[ -d "$nvim_config" || -L "$nvim_config" ]]; then
+        if [[ -L "$nvim_config" ]]; then
+            print_status "Removing existing nvim config symlink..."
+            rm "$nvim_config"
+        else
+            local timestamp=$(date "+%Y%m%d_%H%M%S")
+            print_status "Existing nvim config found, creating backup..."
+            mv "$nvim_config" "$nvim_config.backup.$timestamp"
+        fi
+    fi
+    
+    # Create symlink
+    print_status "Creating symlink for nvim configuration..."
+    ln -s "$dotfiles_nvim" "$nvim_config"
+    print_success "Neovim configuration linked successfully!"
+    
+    # Install/Update plugins
+    print_status "Installing/Updating Neovim plugins..."
+    nvim +PlugInstall! +qall
+    print_success "Neovim plugins installed/updated successfully!"
+}
+
 setup_dotfiles() {
     local dotfiles_dir="$HOME/.dotfiles"
     local timestamp=$(date "+%Y%m%d_%H%M%S")
@@ -112,9 +171,11 @@ check_asdf() {
 main() {
     print_status "Starting initial setup..."
     
+    setup_dotfiles
     check_homebrew
     check_git
     check_asdf
+    setup_neovim
     
     print_success "Initial setup completed!"
 }
