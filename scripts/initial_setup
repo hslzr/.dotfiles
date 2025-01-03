@@ -143,6 +143,55 @@ setup_dotfiles() {
     fi
 }
 
+check_ghostty() {
+    if ! command -v ghostty >/dev/null 2>&1; then
+        print_status "Installing Ghostty..."
+        
+        # Install Ghostty
+        brew install --cask ghostty
+        
+        print_success "Ghostty installed successfully!"
+    else
+        print_success "Ghostty is already installed"
+    fi
+    return 0
+}
+
+# Function to setup Ghostty configuration
+setup_ghostty() {
+
+    # First ensure Ghostty is installed
+    check_ghostty
+
+    local dotfiles_ghostty="$HOME/.dotfiles/ghostty/config"
+    local ghostty_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
+    local ghostty_config="$ghostty_dir/config"
+    
+    # Check if ghostty config exists in dotfiles
+    if [[ ! -f "$dotfiles_ghostty" ]]; then
+        print_error "Ghostty configuration not found in dotfiles"
+        return 1
+    fi
+    
+    # Create Ghostty config directory if it doesn't exist
+    if [[ ! -d "$ghostty_dir" ]]; then
+        print_status "Creating Ghostty configuration directory..."
+        mkdir -p "$ghostty_dir"
+    fi
+    
+    # Handle existing config
+    if [[ -f "$ghostty_config" || -L "$ghostty_config" ]]; then
+        print_status "Removing existing Ghostty config..."
+        rm "$ghostty_config"
+    fi
+    
+    # Create symlink
+    print_status "Creating symlink for Ghostty configuration..."
+    ln -s "$dotfiles_ghostty" "$ghostty_config"
+    print_success "Ghostty configuration linked successfully!"
+}
+
+
 # Function to check if asdf is installed
 check_asdf() {
     if ! command -v asdf >/dev/null 2>&1; then
@@ -176,6 +225,7 @@ main() {
     check_git
     check_asdf
     setup_neovim
+    setup_ghostty
     
     print_success "Initial setup completed!"
 }
