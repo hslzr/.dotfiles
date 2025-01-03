@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 # Set error handling
 set -e
@@ -35,7 +35,7 @@ check_homebrew() {
         # Add Homebrew to PATH for Apple Silicon Macs
         if [[ $(uname -m) == "arm64" ]]; then
             print_status "Configuring Homebrew for Apple Silicon..."
-            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ${ZDOTDIR:-$HOME}/.zprofile
             eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
         
@@ -45,12 +45,39 @@ check_homebrew() {
     fi
 }
 
+# Function to check if asdf is installed
+check_asdf() {
+    if ! command -v asdf >/dev/null 2>&1; then
+        print_status "Installing asdf..."
+        
+        # Clone asdf repository
+        git clone https://github.com/asdf-vm/asdf.git ${ZDOTDIR:-$HOME}/.asdf --branch v0.13.1
+        
+        # Add asdf initialization to zshrc
+        local zshrc="${ZDOTDIR:-$HOME}/.zshrc"
+        if ! grep -q "asdf.sh" "$zshrc"; then
+            print_status "Adding asdf to zshrc..."
+            echo -e "\n# asdf version manager" >> "$zshrc"
+            echo '. "$HOME/.asdf/asdf.sh"' >> "$zshrc"
+            echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> "$zshrc"
+            echo 'autoload -Uz compinit && compinit' >> "$zshrc"
+        fi
+        
+        print_success "asdf installed! Please restart your shell or run: source ${zshrc}"
+    else
+        print_success "asdf is already installed"
+    fi
+}
+
 # Main setup process
 main() {
     print_status "Starting initial setup..."
     
     # Check and install Homebrew
     check_homebrew
+    
+    # Check and install asdf
+    check_asdf
     
     print_success "Initial setup completed!"
 }
