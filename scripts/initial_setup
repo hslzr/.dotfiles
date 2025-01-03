@@ -45,6 +45,16 @@ check_homebrew() {
     fi
 }
 
+check_git() {
+    if ! command -v git >/dev/null 2>&1; then
+        print_error "Git not found"
+        print_status "Installing Git..."
+        brew install git
+    else
+        print_success "Git is already installed"
+    fi
+}
+
 # Function to check if asdf is installed
 check_asdf() {
     if ! command -v asdf >/dev/null 2>&1; then
@@ -73,10 +83,8 @@ check_asdf() {
 main() {
     print_status "Starting initial setup..."
     
-    # Check and install Homebrew
     check_homebrew
-    
-    # Check and install asdf
+    check_git
     check_asdf
     
     print_success "Initial setup completed!"
