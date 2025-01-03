@@ -1,0 +1,12 @@
+# Global config
+theme = OneHalfDark
+unfocused-split-opacity=0.32
+background-opacity=0.95
+background-blur-radius=20
+copy-on-select=true
+auto-update = download
+
+# Kebindings
+keybind = global:cmd+ctrl+opt+space=toggle_quick_terminal
+keybind = cmd+r=clear_screen
+keybind = cmd+s=toggle_secure_input
