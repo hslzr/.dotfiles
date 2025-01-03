@@ -24,6 +24,35 @@ print_error() {
     echo -e "${RED}==>${NC} $1"
 }
 
+check_omz() {
+    if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+        print_status "Oh My Zsh not found. Installing..."
+        
+        # Install Oh My Zsh
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        
+        print_success "Oh My Zsh installed successfully!"
+    else
+        print_success "Oh My Zsh is already installed"
+    fi
+}
+
+check_minimal_theme() {
+    local minimal_theme="minimal"
+    local minimal_theme_file="$HOME/.oh-my-zsh/themes/$minimal_theme"
+    
+    if [[ ! -f "$minimal_theme_file" ]]; then
+        print_status "Minimal theme not found. Cloning..."
+    else
+        print_status "Minimal theme already exists. Deleting..."
+        rm "$minimal_theme_file"
+    fi
+
+    ln -s "$HOME/.dotfiles/oh-my-zsh/themes/minimal.zsh-theme" "$minimal_theme_file"
+    print_success "Minimal theme linked successfully!"
+}
+        
+
 # Function to check if Homebrew is installed
 check_homebrew() {
     if ! command -v brew >/dev/null 2>&1; then
@@ -220,6 +249,8 @@ check_asdf() {
 main() {
     print_status "Starting initial setup..."
     
+    check_omz
+    check_minimal_theme
     setup_dotfiles
     check_homebrew
     check_git
