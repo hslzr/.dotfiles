@@ -55,6 +55,35 @@ check_git() {
     fi
 }
 
+setup_dotfiles() {
+    local dotfiles_dir="$HOME/.dotfiles"
+    local timestamp=$(date "+%Y%m%d_%H%M%S")
+    
+    # Check if .dotfiles directory exists
+    if [[ ! -d "$dotfiles_dir" ]]; then
+        print_error "Dotfiles directory not found at $dotfiles_dir"
+        return 1
+    fi
+
+    # Handle .zshrc
+    if [[ -f "$dotfiles_dir/.zshrc" ]]; then
+        # If .zshrc exists and is not already a symlink to our dotfiles
+        if [[ -f "$HOME/.zshrc" && ! -L "$HOME/.zshrc" ]]; then
+            print_status "Existing .zshrc found, creating backup..."
+            mv "$HOME/.zshrc" "$HOME/.zshrc.backup.$timestamp"
+        elif [[ -L "$HOME/.zshrc" ]]; then
+            print_status "Removing existing .zshrc symlink..."
+            rm "$HOME/.zshrc"
+        fi
+        
+        print_status "Creating symlink for .zshrc..."
+        ln -s "$dotfiles_dir/.zshrc" "$HOME/.zshrc"
+        print_success ".zshrc symlink created successfully!"
+    else
+        print_error ".zshrc not found in dotfiles directory"
+    fi
+}
+
 # Function to check if asdf is installed
 check_asdf() {
     if ! command -v asdf >/dev/null 2>&1; then
