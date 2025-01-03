@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Set error handling
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print status messages
+print_status() {
+    echo -e "${BLUE}==>${NC} $1"
+}
+
+# Function to print success messages
+print_success() {
+    echo -e "${GREEN}==>${NC} $1"
+}
+
+# Function to print error messages
+print_error() {
+    echo -e "${RED}==>${NC} $1"
+}
+
+# Function to check if Homebrew is installed
+check_homebrew() {
+    if ! command -v brew >/dev/null 2>&1; then
+        print_status "Homebrew not found. Installing Homebrew..."
+        
+        # Install Homebrew
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+        # Add Homebrew to PATH for Apple Silicon Macs
+        if [[ $(uname -m) == "arm64" ]]; then
+            print_status "Configuring Homebrew for Apple Silicon..."
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+        
+        print_success "Homebrew installed successfully!"
+    else
+        print_success "Homebrew is already installed"
+    fi
+}
+
+# Main setup process
+main() {
+    print_status "Starting initial setup..."
+    
+    # Check and install Homebrew
+    check_homebrew
+    
+    print_success "Initial setup completed!"
+}
+
+# Run main function
+main
